@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Seeders;
+use Illuminate\Support\Facades\Hash;
 
 use App\Models\Project;
 use App\Models\User;
@@ -18,9 +19,9 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->create([
             'id' => 1,
-            'name' => 'Zura',
-            'email' => 'zura@example.com',
-            'password' => bcrypt('123.321A'),
+            'name' => 'Admin',
+            'email' => 'admin@medi1tv.com',
+            'password' => Hash::make('admin@medi1tv.com'),
             'email_verified_at' => time()
         ]);
        

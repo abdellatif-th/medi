@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\AIController;
 
 Route::redirect('/', '/dashboard');
 
@@ -27,5 +28,14 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::post('/phishing/generate', [AIController::class, 'generatePhishing'])
+    ->middleware('auth')
+    ->name('phishing.generate');
+
+Route::get('/phishing-form', function () {
+    return Inertia::render('Phishing/Show');
+})->middleware(['auth', 'verified'])->name('phishing-form');
+
 
 require __DIR__ . '/auth.php';

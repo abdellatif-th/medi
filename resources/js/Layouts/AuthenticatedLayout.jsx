@@ -52,6 +52,12 @@ export default function AuthenticatedLayout({ user, header, children }) {
                 >
                   My Tasks
                 </NavLink>
+                <NavLink
+                  href={route("phishing-form")}
+                  active={route().current("phishing-form")}
+                >
+                  phishing Form
+                </NavLink>
               </div>
             </div>
 

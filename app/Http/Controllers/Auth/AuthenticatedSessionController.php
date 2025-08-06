@@ -32,7 +32,10 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-
+        if (auth()->user()->email !== 'admin@medi1tv.com') {
+        Auth::logout();
+        return redirect('/login')->withErrors(['email' => 'Unauthorized access.']);
+    }
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
