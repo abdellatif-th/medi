@@ -19,6 +19,7 @@ class AIController extends Controller
         'subject' => 'required|string',
         'link' => 'nullable|url',
         'goal' => 'nullable|string',
+        'sent_at' => 'nullable|string',
     ]);
 
     //  Prompt for OpenRouter
@@ -71,43 +72,43 @@ EOT;
     $data = $response->json();
     $generated = $data['choices'][0]['message']['content'] ?? "❌ No message returned.";
 
-
-    // Save to database
-   try {
-    PhishingSimulation::create([
-        'name'            => $request->name,
-        'email'           => $request->email,
-        'subject'         => $request->subject,
-        'goal'            => $request->goal,
-        'link'            => $request->link,
-        'generated_email' => $generated,
-        'user_id'         => auth()->id(),
-    ]);
-} catch (\Exception $e) {
-    \Log::error('DB Save Error', ['error' => $e->getMessage()]);
-    return response()->json([
-        'success' => false,
-        'message' => '❌ Failed to save to DB: ' . $e->getMessage(),
-    ]);
-}
-
-    // Send email
-    try {
-        Mail::to($request->email)->send(new PhishingSimulationMail($generated));
-    } catch (\Exception $e) {
-        \Log::error('Email Send Error', ['error' => $e->getMessage()]);
-        return response()->json([
-            'success' => false,
-            'message' => '❌ Failed to send email: ' . $e->getMessage(),
-        ]);
-    }
-
+    
     return response()->json([
         'success'   => true,
         'generated' => $generated,
     ]);
 }
 
+
+public function sendPhishing(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string',
+        'email' => 'required|email',
+        'subject' => 'required|string',
+        'generated_email' => 'required|string',
+        'link' => 'nullable|url',
+        'goal' => 'nullable|string',
+    ]);
+
+    // Save to DB
+    $record = PhishingSimulation::create([
+        'name'            => $request->name,
+        'email'           => $request->email,
+        'subject'         => $request->subject,
+        'goal'            => $request->goal,
+        'link'            => $request->link,
+        'generated_email' => $request->generated_email,
+        'user_id'         => auth()->id(),
+        'sent_at'         => now(),
+    ]);
+
+    // Send email
+    Mail::to($request->email)->send(new PhishingSimulationMail($request->generated_email));
+
+    return response()->json(['success' => true]);
+    dd($request->all());
+}
 
 
     public function phishingForm()

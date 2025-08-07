@@ -33,6 +33,11 @@ Route::post('/phishing/generate', [AIController::class, 'generatePhishing'])
     ->middleware('auth')
     ->name('phishing.generate');
 
+Route::post('/phishing/send', [AIController::class, 'sendPhishing'])
+    ->middleware('auth')
+    ->name('phishing.send');
+
+
 Route::get('/phishing-form', function () {
     return Inertia::render('Phishing/Show');
 })->middleware(['auth', 'verified'])->name('phishing-form');
