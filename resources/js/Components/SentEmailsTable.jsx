@@ -39,7 +39,7 @@ export default function SentEmailsTable({ emails }) {
                           </span>
                         )}
                         {email.clicked === 1 && (
-                          <span className="inline-block px-2 py-1 text-xs font-semibold text-white rounded-full bg-purple-600 ml-2">
+                          <span className="inline-block px-2 py-1 text-xs font-semibold text-white rounded-full bg-orange-600 ml-2">
                             Clicked
                           </span>
                         )}

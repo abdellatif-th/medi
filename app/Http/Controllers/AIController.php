@@ -34,7 +34,6 @@ Use persuasive language, typical phishing techniques (urgency, authority, fear o
 Details for the simulation:
 - **Target Name:** {$request->name}
 - **Target Email:** {$request->email}
-- **Link to Include:** {$request->link}
 - **Phishing Goal:** {$request->goal}
 
 Format the response as a full email body with a subject line.
