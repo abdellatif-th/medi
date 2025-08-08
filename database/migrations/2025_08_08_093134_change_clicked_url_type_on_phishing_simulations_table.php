@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('phishing_simulations', function (Blueprint $table) {
-            $table->timestamp('sent_at')->nullable();
+            $table->text('clicked_url')->nullable()->change();
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('phishing_simulations', function (Blueprint $table) {
-            //
+            $table->integer('clicked_url')->nullable()->change();
         });
     }
 };

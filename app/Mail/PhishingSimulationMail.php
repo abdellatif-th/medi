@@ -17,10 +17,13 @@ class PhishingSimulationMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(string $generatedEmail)
-    {
-        $this->generatedEmail = $generatedEmail;
-    }
+    public function __construct(string $generatedEmail, int $simulationId, string $link)
+{
+    $this->generatedEmail = $generatedEmail;
+    $this->simulationId = $simulationId;
+    $this->link = $link;
+
+}
 
     /**
      * Get the message envelope.
@@ -36,13 +39,22 @@ class PhishingSimulationMail extends Mailable
      * Get the message content definition.
      */
     public function content(): Content
-    {
-        return new Content(
-            view: 'emails.simulation',  // Your actual Blade email view here
-        );
-    }
+{
+    return new Content(
+        view: 'emails.simulation',
+        
+        with: [
+            'generatedEmail' => $this->generatedEmail,
+            'simulationId' => $this->simulationId,
+            'link' => $this->link,
 
-    /**
+        ]
+    );
+}
+
+ 
+
+/**
      * Get the attachments for the message.
      *
      * @return array<int, \Illuminate\Mail\Mailables\Attachment>

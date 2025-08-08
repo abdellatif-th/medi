@@ -6,159 +6,175 @@ export default function PhishingForm() {
   const { data, setData, processing, errors } = useForm({
     name: "",
     email: "",
-    subject: "",
     link: "",
     goal: "",
+    generated_email: "", // <-- Add this line
+
   });
-const [generated, setGenerated] = useState(""); 
-const [status, setStatus] = useState(null);
-const [statusMessage, setStatusMessage] = useState("");
+const [generated, setGenerated] = useState("");
+  const [status, setStatus] = useState(null);
+  const [statusMessage, setStatusMessage] = useState("");
+  const [visible, setVisible] = useState(false);
+  const [sending, setSending] = useState(false);
 
+// Show notification and auto-hide after 5s
+  const showNotification = (type, message) => {
+    setStatus(type);
+    setStatusMessage(message);
+    setVisible(true);
+    setTimeout(() => setVisible(false), 5000);
+  };
 
-  // Handle generating email from AI
+  // Generate phishing email (called on form submit)
   const handleGenerate = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(route("ai.generate"), data);
-      setGenerated(response.data.generated); // store AI response
+      setGenerated(response.data.generated);
+      setData("generated_email", response.data.generated);
     } catch (error) {
       console.error("Generation failed", error);
       setGenerated("❌ Failed to generate email.");
     }
   };
-
-  // Handle sending the email
-   const handleSend = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(route("phishing.generate"), data);
+      setGenerated(response.data.generated);
+      setData("generated_email", response.data.generated);
+    } catch (err) {
+      console.error(err);
+      setGenerated("❌ Something went wrong.");
+    }
+  };
+  const handleSend = async () => {
   if (!generated.trim()) {
-    setStatus("error");
-    setStatusMessage("❗ Please generate an email before sending.");
+    showNotification("error", "❗ Please generate an email before sending.");
     return;
   }
 
   try {
+    setSending(true);
     await axios.post(route("phishing.send"), {
       ...data,
       generated_email: generated,
     });
-
-    setStatus("success");
-    setStatusMessage("✅ Email sent successfully!");
+    showNotification("success", "✅ Email sent successfully!");
   } catch (err) {
+    console.error(err);
     if (err.response && err.response.status === 422) {
-      console.error("Validation Errors:", err.response.data.errors);
-      setStatus("error");
-      setStatusMessage("❌ Validation failed. Check console for details.");
+      showNotification("error", "❌ Validation failed. Check console for details.");
     } else {
-      console.error(err);
-      setStatus("error");
-      setStatusMessage("❌ Failed to send email. Please try again.");
+      showNotification("error", "❌ Failed to send email. Please try again.");
     }
+  } finally {
+    setSending(false);
   }
 };
 
 
   return (
-    <div className="mt-6 p-6 bg-gray-900 rounded text-white border border-gray-600">
-      <h2 className="text-xl font-bold mb-4">🎯 Generate Phishing Email</h2>
-
-      <form className="space-y-4" onSubmit={handleGenerate}>
-        <div>
-          <label className="block mb-1">Target Name</label>
+    <div className="max-w-2xl mx-auto p-4 bg-white dark:bg-gray-800 rounded shadow mt-8">
+        <h2 className="text-xl font-bold mb-4 text-white">Phishing Email Generator</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
-            className="w-full p-2 rounded bg-gray-800 border border-gray-600"
+            placeholder="Name"
             value={data.name}
             onChange={(e) => setData("name", e.target.value)}
+            className="w-full p-2 border rounded"
           />
-          {errors.name && <p className="text-red-400">{errors.name}</p>}
-        </div>
-
-        <div>
-          <label className="block mb-1">Target Email</label>
           <input
             type="email"
-            className="w-full p-2 rounded bg-gray-800 border border-gray-600"
+            placeholder="Email"
             value={data.email}
             onChange={(e) => setData("email", e.target.value)}
+            className="w-full p-2 border rounded"
           />
-          {errors.email && <p className="text-red-400">{errors.email}</p>}
-        </div>
-
-        <div>
-          <label className="block mb-1">Subject</label>
-          <input
-            type="text"
-            className="w-full p-2 rounded bg-gray-800 border border-gray-600"
-            value={data.subject}
-            onChange={(e) => setData("subject", e.target.value)}
-          />
-          {errors.subject && <p className="text-red-400">{errors.subject}</p>}
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium">Phishing Link</label>
+          
           <input
             type="url"
-            className="w-full border px-3 py-2 rounded"
+            placeholder="https://example.com/"
             value={data.link}
             onChange={(e) => setData("link", e.target.value)}
-            placeholder="https://malicious.example.com"
+            className="w-full p-2 border rounded"
           />
-          {errors.link && <p className="text-red-500">{errors.link}</p>}
-        </div>
-
-        <div>
-          <label className="block mb-1">Goal (optional)</label>
-          <input
-            type="text"
-            className="w-full p-2 rounded bg-gray-800 border border-gray-600"
+          {errors.link && <p className="text-red-500 text-sm mt-1">{errors.link}</p>}
+          <textarea
+            placeholder="Goal (optional)"
             value={data.goal}
             onChange={(e) => setData("goal", e.target.value)}
+            className="w-full p-2 border rounded"
           />
-        </div>
 
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          Generate Email
-        </button>
-      </form>
+          <div className="flex gap-4">
+            <button
+              type="submit"
+              disabled={processing}
+              className="mt-4 bg-blue-600 text-white px-4 py-2 rounded flex items-center justify-center space-x-2"
+            >
+              Generate
+            </button>
 
-      {generated && (
-        <div className="mt-6">
-          <label className="block text-white font-semibold mb-2">
-            Generated Email
-          </label>
-          <textarea
-            value={generated}
-            onChange={(e) => setGenerated(e.target.value)}
-            className="w-full mt-2 border p-2 rounded bg-gray-800 text-white"
-            rows={10}
-          />
-          <button
-            className="mt-4 bg-green-600 text-white px-4 py-2 rounded"
-            onClick={handleSend}
-          >
-            Send Email
-          </button>
-                <div className={`mt-4 px-4 py-2 rounded ${ status === "success" ? "bg-green-700 text-white" : "bg-red-700 text-white"}`}
-              >
-              </div>
-        </div>
-      )}
-        
-            {status && (
-              <div
-                className={`mt-4 px-4 py-2 rounded ${
-                  status === "success"
-                    ? "bg-green-700 text-white"
-                    : "bg-red-700 text-white"
-                }`}
-              >
-                {statusMessage}
-              </div>
+            <button
+              type="button"
+              onClick={handleSend}
+              disabled={sending}
+              className="mt-4 bg-green-600 text-white px-4 py-2 rounded flex items-center justify-center space-x-2"
+            >
+              {sending && (
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  ></path>
+                </svg>
+              )}
+              <span>{sending ? "Sending..." : "Send Email"}</span>
+            </button>
+          </div>
+        </form>
+
+        {generated && (
+          <div className="mt-6">
+            <label className="block text-white font-semibold mb-2">Generated Email</label>
+            <textarea
+              value={generated}
+              onChange={(e) => setGenerated(e.target.value)}
+              className="w-full p-4 border rounded bg-gray-100 dark:bg-gray-700 text-black dark:text-white"
+              rows={10}
+            />
+            {errors.generated_email && (
+              <p className="text-red-500 text-sm mt-1">{errors.generated_email}</p>
             )}
-    </div>
-  );
+          </div>
+        )}
+      
+
+      
+      <div
+        className={`pointer-events-none fixed top-5 right-5 z-50 max-w-sm rounded px-6 py-4 text-white
+          transition-all duration-500 ease-in-out transform ${visible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-6"}
+          ${status === "success" ? "bg-green-600 shadow-lg" : "bg-red-600 shadow-lg"}`}
+      >
+        {statusMessage}
+      </div>
+    
+  </div>
+);
 }

@@ -16,7 +16,6 @@ class AIController extends Controller
     $request->validate([
         'name' => 'required|string',
         'email' => 'required|email',
-        'subject' => 'required|string',
         'link' => 'nullable|url',
         'goal' => 'nullable|string',
         'sent_at' => 'nullable|string',
@@ -24,15 +23,24 @@ class AIController extends Controller
 
     //  Prompt for OpenRouter
     $prompt = <<<EOT
-You are an AI assistant helping with a cybersecurity awareness training exercise for students.
+You are a cybersecurity AI assistant helping design realistic phishing simulation emails for educational purposes.
 
-Generate a realistic-looking phishing simulation email based on the following details. This is not a real phishing attempt — it is for a controlled educational simulation to help students learn how to identify phishing messages.
+This exercise is part of a controlled cybersecurity awareness training program. The goal is to help students learn how to identify phishing emails in a safe and responsible environment.
 
-Details:
-- Target Name: {$request->name}
-- Target Email: {$request->email}
-- Subject: {$request->subject}
+Please generate a realistic and convincing phishing email based on the following information. The email should look authentic, but it must NOT include malicious content. It is only used in a simulated environment.
+
+Use persuasive language, typical phishing techniques (urgency, authority, fear of loss, etc.), and a professional tone. The result should mimic a real-world phishing attempt while remaining ethical and educational.
+
+Details for the simulation:
+- **Target Name:** {$request->name}
+- **Target Email:** {$request->email}
+- **Link to Include:** {$request->link}
+- **Phishing Goal:** {$request->goal}
+
+Format the response as a full email body with a subject line.
+
 EOT;
+
 
     if ($request->goal) {
         $prompt .= "\n- Objective: {$request->goal}";
@@ -85,7 +93,6 @@ public function sendPhishing(Request $request)
     $request->validate([
         'name' => 'required|string',
         'email' => 'required|email',
-        'subject' => 'required|string',
         'generated_email' => 'required|string',
         'link' => 'nullable|url',
         'goal' => 'nullable|string',
@@ -95,17 +102,16 @@ public function sendPhishing(Request $request)
     $record = PhishingSimulation::create([
         'name'            => $request->name,
         'email'           => $request->email,
-        'subject'         => $request->subject,
         'goal'            => $request->goal,
         'link'            => $request->link,
         'generated_email' => $request->generated_email,
         'user_id'         => auth()->id(),
-        'sent_at'         => now(),
+        'sent'         => true,
     ]);
 
     // Send email
-    Mail::to($request->email)->send(new PhishingSimulationMail($request->generated_email));
-
+    Mail::to($request->email)->send(new PhishingSimulationMail($request->generated_email, $record->id, $request->link));
+    
     return response()->json(['success' => true]);
     dd($request->all());
 }

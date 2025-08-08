@@ -8,7 +8,9 @@ use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\AIController;
+use App\Http\Controllers\PhishingTrackingController;
 
 Route::redirect('/', '/dashboard');
 
@@ -42,5 +44,7 @@ Route::get('/phishing-form', function () {
     return Inertia::render('Phishing/Show');
 })->middleware(['auth', 'verified'])->name('phishing-form');
 
+Route::get('/track/open/{id}', [TrackingController::class, 'trackOpen'])->name('track.open');
+Route::get('/track/click/{id}', [TrackingController::class, 'trackClick'])->name('track.click');
 
 require __DIR__ . '/auth.php';

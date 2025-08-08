@@ -9,12 +9,7 @@ class PhishingSimulation extends Model
 {
     use HasFactory;
     protected $fillable = [
-    'name',
-    'email',
-    'subject',
-    'goal',
-    'link',
-    'generated_email',
-    'user_id',
+    'name', 'email', 'link', 'goal', 'generated_email', 'user_id', 'opened', 'clicked',
 ];
+
 }

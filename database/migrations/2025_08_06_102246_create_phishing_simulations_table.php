@@ -15,12 +15,16 @@ return new class extends Migration
         $table->id();
         $table->string('name');
         $table->string('email');
-        $table->string('subject');
         $table->text('goal')->nullable();
         $table->text('link')->nullable();
         $table->longText('generated_email'); 
         $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
+        $table->boolean('clicked')->default(false);
+        $table->boolean('opened')->default(false);
+        $table->boolean('clicked_url')->default(false);
+        $table->timestamp('sent_at')->nullable();
         $table->timestamps();
+
     });
     }
 

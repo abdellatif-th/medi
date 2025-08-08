@@ -16,7 +16,6 @@ export default function PhishingForm({ auth }) {
   const { data, setData, post, processing, errors } = useForm({
     name: "",
     email: "",
-    subject: "",
     goal: "",
     link: "",
     generated_email: "", 
@@ -96,85 +95,79 @@ export default function PhishingForm({ auth }) {
     <div className="max-w-2xl mx-auto p-4 bg-white dark:bg-gray-800 rounded shadow mt-8">
       <h2 className="text-xl font-bold mb-4 text-white">Phishing Email Generator</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
-  <input
-    type="text"
-    placeholder="Name"
-    value={data.name}
-    onChange={(e) => setData("name", e.target.value)}
-    className="w-full p-2 border rounded"
-  />
-  <input
-    type="email"
-    placeholder="Email"
-    value={data.email}
-    onChange={(e) => setData("email", e.target.value)}
-    className="w-full p-2 border rounded"
-  />
-  <input
-    type="text"
-    placeholder="Subject"
-    value={data.subject}
-    onChange={(e) => setData("subject", e.target.value)}
-    className="w-full p-2 border rounded"
-  />
-  <input
-    type="url"
-    placeholder="https://example.com/"
-    value={data.link}
-    onChange={(e) => setData("link", e.target.value)}
-    className="w-full p-2 border rounded"
-  />
-  {errors.link && <p className="text-red-500 text-sm mt-1">{errors.link}</p>}
-  <textarea
-    placeholder="Goal (optional)"
-    value={data.goal}
-    onChange={(e) => setData("goal", e.target.value)}
-    className="w-full p-2 border rounded"
-  ></textarea>
+          <input
+            type="text"
+            placeholder="Name"
+            value={data.name}
+            onChange={(e) => setData("name", e.target.value)}
+            className="w-full p-2 border rounded"
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={data.email}
+            onChange={(e) => setData("email", e.target.value)}
+            className="w-full p-2 border rounded"
+          />
+          
+          <input
+            type="url"
+            placeholder="https://example.com/"
+            value={data.link}
+            onChange={(e) => setData("link", e.target.value)}
+            className="w-full p-2 border rounded"
+          />
+          {errors.link && <p className="text-red-500 text-sm mt-1">{errors.link}</p>}
+          <textarea
+            placeholder="Goal (optional)"
+            value={data.goal}
+            onChange={(e) => setData("goal", e.target.value)}
+            className="w-full p-2 border rounded"
+          ></textarea>
 
-  <div className="flex gap-4">
-    <button
-      type="submit"
-      disabled={processing}
-      className="mt-4 bg-blue-600 text-white px-4 py-2 rounded flex items-center justify-center space-x-2"
-    >
-      Generate
-    </button>
+          <div className="flex gap-4">
+            <button
+              type="submit"
+              disabled={processing}
+              className="mt-4 bg-blue-600 text-white px-4 py-2 rounded flex items-center justify-center space-x-2"
+            >
+              Generate
+            </button>
 
-    <button
-  className="mt-4 bg-green-600 text-white px-4 py-2 rounded flex items-center justify-center space-x-2"
-  onClick={handleSend}
-  disabled={sending}
->
-  {sending && (
-    <svg
-      className="animate-spin h-5 w-5 text-white"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <circle
-        className="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      ></circle>
-      <path
-        className="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-      ></path>
-    </svg>
-  )}
-  <span>{sending ? "Sending..." : "Send Email"}</span>
-</button>
+          <button
+          type="button"
+              className="mt-4 bg-green-600 text-white px-4 py-2 rounded flex items-center justify-center space-x-2"
+              onClick={handleSend}
+              disabled={sending} > 
+              {sending && (
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  ></path>
+                </svg>
+              )}
+              <span>{sending ? "Sending..." : "Send Email"}</span>
+          </button>
 
-    
-  </div>
-    
-</form>
+                  
+       </div>
+          
+      </form>
 
 
       {generated && (

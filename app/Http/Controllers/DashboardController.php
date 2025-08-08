@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
+use App\Models\PhishingSimulation;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -43,6 +44,11 @@ class DashboardController extends Controller
             ->limit(10)
             ->get();
         $activeTasks = TaskResource::collection($activeTasks);
+        
+        $emails = PhishingSimulation::where('user_id', auth()->id())
+                ->latest()
+                ->get();
+
         return inertia(
             'Dashboard',
             compact(
@@ -52,7 +58,8 @@ class DashboardController extends Controller
                 'myProgressTasks',
                 'totalCompletedTasks',
                 'myCompletedTasks',
-                'activeTasks'
+                'activeTasks',
+                'emails'
             )
         );
     }
