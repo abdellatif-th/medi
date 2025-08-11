@@ -1,14 +1,14 @@
-import { useForm } from "@inertiajs/react";
+import { router, useForm } from "@inertiajs/react";
 import { useState } from "react";
 import axios from "axios";
 
-export default function PhishingForm() {
+export default function PhishingForm({ onEmailSent }) {
   const { data, setData, processing, errors } = useForm({
     name: "",
     email: "",
     link: "",
     goal: "",
-    generated_email: "", // <-- Add this line
+    generated_email: "", 
 
   });
 const [generated, setGenerated] = useState("");
@@ -48,7 +48,7 @@ const [generated, setGenerated] = useState("");
       setGenerated("❌ Something went wrong.");
     }
   };
-  const handleSend = async () => {
+ const handleSend = async () => {
   if (!generated.trim()) {
     showNotification("error", "❗ Please generate an email before sending.");
     return;
@@ -61,6 +61,14 @@ const [generated, setGenerated] = useState("");
       generated_email: generated,
     });
     showNotification("success", "✅ Email sent successfully!");
+
+    // You don't need to call onEmailSent if you reload the page
+    // But if you want, you can still call it before reload
+    if (onEmailSent) onEmailSent();
+
+    // Reload the current Inertia page to refresh data without full browser reload
+    router.reload();
+
   } catch (err) {
     console.error(err);
     if (err.response && err.response.status === 422) {

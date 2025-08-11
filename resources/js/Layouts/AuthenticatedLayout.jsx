@@ -28,35 +28,18 @@ export default function AuthenticatedLayout({ user, header, children }) {
                 >
                   Dashboard
                 </NavLink>
+                
                 <NavLink
-                  href={route("project.index")}
-                  active={route().current("project.index")}
+                  href={route("phishing-table")}
+                  active={route().current("phishing-table")}
                 >
-                  Projects
-                </NavLink>
-                <NavLink
-                  href={route("task.index")}
-                  active={route().current("task.index")}
-                >
-                  All Tasks
-                </NavLink>
-                <NavLink
-                  href={route("user.index")}
-                  active={route().current("user.index")}
-                >
-                  Users
-                </NavLink>
-                <NavLink
-                  href={route("task.myTasks")}
-                  active={route().current("task.myTasks")}
-                >
-                  My Tasks
+                  Phishing Table
                 </NavLink>
                 <NavLink
                   href={route("phishing-form")}
                   active={route().current("phishing-form")}
                 >
-                  phishing Form
+                  Phishing Form
                 </NavLink>
               </div>
             </div>

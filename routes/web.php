@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\AIController;
-use App\Http\Controllers\PhishingTrackingController;
+use App\Models\PhishingSimulation;
 
 Route::redirect('/', '/dashboard');
 
@@ -43,6 +43,13 @@ Route::post('/phishing/send', [AIController::class, 'sendPhishing'])
 Route::get('/phishing-form', function () {
     return Inertia::render('Phishing/Show');
 })->middleware(['auth', 'verified'])->name('phishing-form');
+
+Route::get('/phishing-table', function () {
+    $emails = PhishingSimulation::all(); // Or whatever query you need
+    return Inertia::render('Phishingsenttables/Show', [
+        'emails' => $emails
+    ]);
+})->middleware(['auth', 'verified'])->name('phishing-table');
 
 Route::get('/track/open/{id}', [TrackingController::class, 'trackOpen'])->name('track.open');
 Route::get('/track/click/{id}', [TrackingController::class, 'trackClick'])->name('track.click');
