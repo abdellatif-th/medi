@@ -11,9 +11,10 @@ export default function PhishingForm({ auth }) {
   const [statusMessage, setStatusMessage] = useState(""); 
   const [visible, setVisible] = useState(false); 
   const [sending, setSending] = useState(false);
+    const [processing, setProcessing] = useState(false);
 
 
-  const { data, setData, post, processing, errors } = useForm({
+  const { data, setData, post, errors } = useForm({
     name: "",
     email: "",
     goal: "",
@@ -43,16 +44,20 @@ export default function PhishingForm({ auth }) {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post(route("phishing.generate"), data);
-      setGenerated(response.data.generated);
-      setData("generated_email", response.data.generated);
-    } catch (err) {
-      console.error(err);
-      setGenerated("❌ Something went wrong.");
-    }
-  };
+  e.preventDefault();
+  setProcessing(true);  // Start spinner
+  try {
+    const response = await axios.post(route("phishing.generate"), data);
+    setGenerated(response.data.generated);
+    setData("generated_email", response.data.generated);
+  } catch (err) {
+    console.error(err);
+    setGenerated("❌ Something went wrong.");
+  } finally {
+    setProcessing(false); // Stop spinner
+  }
+};
+
   const handleSend = async () => {
   if (!generated.trim()) {
     showNotification("error", "❗ Please generate an email before sending.");
@@ -126,12 +131,34 @@ export default function PhishingForm({ auth }) {
           ></textarea>
 
           <div className="flex gap-4">
-            <button
+             <button
               type="submit"
               disabled={processing}
               className="mt-4 bg-blue-600 text-white px-4 py-2 rounded flex items-center justify-center space-x-2"
             >
-              Generate
+              {processing && (
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  ></path>
+                </svg>
+              )}
+              <span>{processing ? "Generating..." : "Generate"}</span>
             </button>
 
           <button

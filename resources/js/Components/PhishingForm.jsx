@@ -3,7 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 
 export default function PhishingForm({ onEmailSent }) {
-  const { data, setData, processing, errors } = useForm({
+  const { data, setData, errors } = useForm({
     name: "",
     email: "",
     link: "",
@@ -11,6 +11,8 @@ export default function PhishingForm({ onEmailSent }) {
     generated_email: "", 
 
   });
+    const [processing, setProcessing] = useState(false);
+
 const [generated, setGenerated] = useState("");
   const [status, setStatus] = useState(null);
   const [statusMessage, setStatusMessage] = useState("");
@@ -39,6 +41,7 @@ const [generated, setGenerated] = useState("");
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+      setProcessing(true); 
     try {
       const response = await axios.post(route("phishing.generate"), data);
       setGenerated(response.data.generated);
@@ -46,7 +49,11 @@ const [generated, setGenerated] = useState("");
     } catch (err) {
       console.error(err);
       setGenerated("❌ Something went wrong.");
-    }
+    } finally {
+    setProcessing(false); // <-- stop spinner here
+        console.log("Generate finished, processing stopped");
+
+  }
   };
  const handleSend = async () => {
   if (!generated.trim()) {
@@ -62,8 +69,6 @@ const [generated, setGenerated] = useState("");
     });
     showNotification("success", "✅ Email sent successfully!");
 
-    // You don't need to call onEmailSent if you reload the page
-    // But if you want, you can still call it before reload
     if (onEmailSent) onEmailSent();
 
     // Reload the current Inertia page to refresh data without full browser reload
@@ -122,8 +127,31 @@ const [generated, setGenerated] = useState("");
               disabled={processing}
               className="mt-4 bg-blue-600 text-white px-4 py-2 rounded flex items-center justify-center space-x-2"
             >
-              Generate
+              {processing && (
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  ></path>
+                </svg>
+              )}
+              <span>{processing ? "Generating..." : "Generate"}</span>
             </button>
+
 
             <button
               type="button"

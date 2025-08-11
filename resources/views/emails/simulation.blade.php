@@ -15,4 +15,4 @@
 
 {!! nl2br($emailWithTrackedLink) !!}
 
-<img src="{{ route('track.open', ['id' => $simulationId]) }}" width="1" height="1" alt="" style="display:none;" />
+<!-- <img src="{{ route('track.open', ['id' => $simulationId]) }}" width="1" height="1" alt="" style="display:none;" /> -->
