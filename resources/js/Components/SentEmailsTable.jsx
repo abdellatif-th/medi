@@ -183,8 +183,8 @@ const barData = [
                 <ResponsiveContainer width="100%" height={250}>
                   <BarChart data={barData}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
+                    <XAxis dataKey="name" stroke="#ffffff" />
+                    <YAxis stroke="#ffffff"/>
                     <Tooltip />
                     <Legend />
                     <Bar dataKey="value" fill="#0ea0efff" />

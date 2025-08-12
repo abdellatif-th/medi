@@ -4,19 +4,7 @@ import { Head, Link, router } from "@inertiajs/react";
 import PhishingForm from "@/Components/PhishingForm"; 
 import SentEmailsTable from "@/Components/SentEmailsTable";
 import React, { useState, useEffect } from "react";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Legend
-} from "recharts";
+
 export default function Dashboard({
     
   emails: initialEmails,
