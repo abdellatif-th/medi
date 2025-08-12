@@ -25,19 +25,15 @@ class PhishingSimulationMail extends Mailable
 
 }
 
-    /**
-     * Get the message envelope.
-     */
+    
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Phishing Simulation Mail',
+            subject: 'ATTENTION',
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
+    
     public function content(): Content
 {
     return new Content(

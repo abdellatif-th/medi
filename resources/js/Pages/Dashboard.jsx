@@ -4,18 +4,24 @@ import { Head, Link, router } from "@inertiajs/react";
 import PhishingForm from "@/Components/PhishingForm"; 
 import SentEmailsTable from "@/Components/SentEmailsTable";
 import React, { useState, useEffect } from "react";
-
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Legend
+} from "recharts";
 export default function Dashboard({
     
   emails: initialEmails,
   auth,
-  totalPendingTasks,
-  myPendingTasks,
-  totalProgressTasks,
-  myProgressTasks,
-  totalCompletedTasks,  
-  myCompletedTasks,
-  activeTasks,
+ 
 }) {
   
   const [emails, setEmails] = useState(initialEmails);
@@ -35,17 +41,15 @@ export default function Dashboard({
     >
       <Head title="Dashboard" />
 
-      <div className="py-12">
         
-        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-4">
-        
+        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 ">
+           <SentEmailsTable emails={emails} />
+
           <PhishingForm onEmailSent={handleEmailCreated} />
-          <SentEmailsTable emails={emails} />
         </div>
         
-      </div>
 
-     
+      
     </AuthenticatedLayout>
   );
 }
