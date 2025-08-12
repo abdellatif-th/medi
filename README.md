@@ -6,7 +6,7 @@ A phishing simulation platform built with Laravel 11 and React. This application
 /*Features*/
 1. User registration & login  
 2. AI-powered automatic phishing email generation based on the campaign objective  
-3. Send phishing emails and track user interactions (clicks, opens)  
+3. Send phishing emails and track user interactions (clicked)  
 4. Real-time notifications on email interactions  
 5. Dashboard with detailed metrics and analytics  
 6. Filtering and pagination for sent emails  
