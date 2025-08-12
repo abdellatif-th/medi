@@ -96,7 +96,7 @@ export default function SentEmailsPage({ auth, emails }) {
            {/* Stat boxes */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
               {/* Total Sent */}
-              <div className="flex flex-col items-center justify-center bg-blue-100 dark:bg-blue-800 text-blue-900 dark:text-blue-100 p-6 rounded-2xl shadow-md">
+              <div className="flex flex-col items-center justify-center bg-[#0ea0efff] p-6 rounded-2xl shadow-md">
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
@@ -105,11 +105,12 @@ export default function SentEmailsPage({ auth, emails }) {
               </div>
 
               {/* Clicked */}
-              <div className="flex flex-col items-center justify-center bg-green-100 dark:bg-green-800 text-green-900 dark:text-green-100 p-6 rounded-2xl shadow-md">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2a5 5 0 00-5 5v10a5 5 0 0010 0V7a5 5 0 00-5-5z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v4" />
-                </svg>
+
+              <div className="flex flex-col items-center justify-center bg-[#0c7e06]  rounded-2xl shadow-md">
+               <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2a5 5 0 00-5 5v10a5 5 0 0010 0V7a5 5 0 00-5-5z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v4" />
+              </svg>
                 <div className="text-3xl font-bold">{clickedCount}</div>
                 <div className="text-lg font-medium">Clicked</div>
               </div>

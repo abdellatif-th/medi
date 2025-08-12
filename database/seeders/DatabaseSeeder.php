@@ -24,11 +24,6 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('admin@medi1tv.com'),
             'email_verified_at' => time()
         ]);
-       
-
-        Project::factory()
-            ->count(1)
-            ->hasTasks(1)
-            ->create();
+      
     }
 }
