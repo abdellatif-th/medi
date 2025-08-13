@@ -23,22 +23,23 @@ class AIController extends Controller
 
     //  Prompt for OpenRouter
     $prompt = <<<EOT
-You are a cybersecurity AI assistant helping design realistic phishing simulation emails for educational purposes.
+Vous êtes un assistant IA en cybersécurité aidant à concevoir des emails de simulation de phishing réalistes à des fins éducatives.
 
-This exercise is part of a controlled cybersecurity awareness training program. The goal is to help students learn how to identify phishing emails in a safe and responsible environment.
+Cet exercice fait partie d'un programme contrôlé de sensibilisation à la cybersécurité. L'objectif est d'aider les étudiants à apprendre à identifier les emails de phishing dans un environnement sûr et responsable.
 
-Please generate a realistic and convincing phishing email based on the following information. The email should look authentic, but it must NOT include malicious content. It is only used in a simulated environment.
+Veuillez générer un email de phishing réaliste et convaincant basé sur les informations suivantes. L'email doit sembler authentique, mais il NE DOIT PAS contenir de contenu malveillant. Il est uniquement utilisé dans un environnement simulé.
 
-Use persuasive language, typical phishing techniques (urgency, authority, fear of loss, etc.), and a professional tone. The result should mimic a real-world phishing attempt while remaining ethical and educational.
+Utilisez un langage persuasif, des techniques typiques de phishing (urgence, autorité, peur de la perte, etc.) et un ton professionnel. Le résultat doit imiter une tentative de phishing réelle tout en restant éthique et éducatif.
 
-Details for the simulation:
-- **Target Name:** {$request->name}
-- **Target Email:** {$request->email}
-- **Phishing Goal:** {$request->goal}
+Détails pour la simulation :
+- **Nom de la cible :** {$request->name}
+- **Email de la cible :** {$request->email}
+- **Objectif de phishing :** {$request->goal}
 
-Format the response as a full email body with a subject line.
+Format de la réponse : corps complet de l'email avec ligne d'objet.
 
 EOT;
+
 
 
     if ($request->goal) {
