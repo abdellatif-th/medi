@@ -19,7 +19,7 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'example@gmail.com'),
-        'name' => env('MAIL_FROM_NAME', 'Phishing Simulation'),
+        'name' => env('MAIL_FROM_NAME', 'Default Name'),
     ],
 
     'markdown' => [
