@@ -12,20 +12,12 @@ class PhishingSimulationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $generatedEmail;
+    public function __construct(
+        public string $generatedEmail,
+        public int $simulationId,
+        public string $link
+    ) {}
 
-    /**
-     * Create a new message instance.
-     */
-    public function __construct(string $generatedEmail, int $simulationId, string $link)
-{
-    $this->generatedEmail = $generatedEmail;
-    $this->simulationId = $simulationId;
-    $this->link = $link;
-
-}
-
-    
     public function envelope(): Envelope
     {
         return new Envelope(
@@ -33,28 +25,18 @@ class PhishingSimulationMail extends Mailable
         );
     }
 
-    
     public function content(): Content
-{
-    return new Content(
-        view: 'emails.simulation',
-        
-        with: [
-            'generatedEmail' => $this->generatedEmail,
-            'simulationId' => $this->simulationId,
-            'link' => $this->link,
+    {
+        return new Content(
+            view: 'emails.simulation',
+            with: [
+                'generatedEmail' => $this->generatedEmail,
+                'simulationId' => $this->simulationId,
+                'link' => $this->link,
+            ]
+        );
+    }
 
-        ]
-    );
-}
-
- 
-
-/**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
     public function attachments(): array
     {
         return [];

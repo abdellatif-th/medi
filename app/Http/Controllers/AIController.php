@@ -96,9 +96,15 @@ public function sendPhishing(Request $request)
         'generated_email' => 'required|string',
         'link' => 'nullable|url',
         'goal' => 'nullable|string',
+        'from_email' => 'nullable|email',
+        'from_name' => 'nullable|string',
     ]);
 
-    // Save to DB
+    // 1️⃣ Récupérer les valeurs envoyées ou utiliser celles du .env
+    $fromEmail = $request->input('from_email', config('mail.from.address'));
+    $fromName = $request->input('from_name', config('mail.from.name'));
+
+    // 2️⃣ Sauvegarde en base
     $record = PhishingSimulation::create([
         'name'            => $request->name,
         'email'           => $request->email,
@@ -106,14 +112,26 @@ public function sendPhishing(Request $request)
         'link'            => $request->link,
         'generated_email' => $request->generated_email,
         'user_id'         => auth()->id(),
-        'sent'         => true,
+        'sent'            => true,
     ]);
 
-    // Send email
-    Mail::to($request->email)->send(new PhishingSimulationMail($request->generated_email, $record->id, $request->link));
-    
+    // 3️⃣ Changer dynamiquement le sender par config (optionnel)
+    config([
+        'mail.from.address' => $fromEmail,
+        'mail.from.name' => $fromName,
+    ]);
+
+    // 4️⃣ Envoi de l’email
+    Mail::to($request->email)->send(
+        new PhishingSimulationMail(
+            $request->generated_email,
+            $record->id,
+            $request->link
+        )
+    );
+
+    // 5️⃣ Réponse JSON
     return response()->json(['success' => true]);
-    dd($request->all());
 }
 
 

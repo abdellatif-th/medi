@@ -167,9 +167,24 @@ export default function PhishingForm({ onEmailSent }) {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+            <input
+              type="text"
+              placeholder="From Name"
+              value={data.from_name || ""}
+              onChange={(e) => setData("from_name", e.target.value)}
+              className="w-full p-2 border rounded"
+            />
+            <input
+              type="email"
+              placeholder="From Email"
+              value={data.from_email || ""}
+              onChange={(e) => setData("from_email", e.target.value)}
+              className="w-full p-2 border rounded"
+            />            
+
           <input
             type="text"
-            placeholder="Name"
+            placeholder="Attack Name/Type"
             value={data.name}
             onChange={(e) => setData("name", e.target.value)}
             className="w-full p-2 border rounded"
@@ -177,7 +192,7 @@ export default function PhishingForm({ onEmailSent }) {
 
           <input
             type="text"
-            placeholder="Emails (comma separated)"
+            placeholder="To Emails (comma separated)"
             value={data.email}
             onChange={(e) => setData("email", e.target.value)}
             disabled={csvEmails.length > 0} // disable if CSV is uploaded
