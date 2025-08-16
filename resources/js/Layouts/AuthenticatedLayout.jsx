@@ -140,6 +140,18 @@ export default function AuthenticatedLayout({ user, header, children }) {
             >
               Dashboard
             </ResponsiveNavLink>
+            <ResponsiveNavLink
+              href={route("phishing-table")}
+                  active={route().current("phishing-table")}
+                >
+                  Phishing Table
+            </ResponsiveNavLink>
+            <ResponsiveNavLink
+              href={route("phishing-form")}
+                  active={route().current("phishing-form")}
+                >
+                  Phishing Form
+            </ResponsiveNavLink>
           </div>
 
           <div className="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
