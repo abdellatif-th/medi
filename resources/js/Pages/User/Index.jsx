@@ -120,6 +120,7 @@ export default function Index({ auth, users, queryParams = null, success }) {
                         sort_field={queryParams.sort_field}
                         sort_direction={queryParams.sort_direction}
                         sortChanged={sortChanged}
+                        text-center
                       >
                         Email
                       </TableHeading>
@@ -133,7 +134,7 @@ export default function Index({ auth, users, queryParams = null, success }) {
                         Create Date
                       </TableHeading>
 
-                      <th className="px-3 py-3 text-right">Actions</th>
+                      <th className="px-3 py-3 text-center">Actions</th>
                     </tr>
                   </thead>
                   

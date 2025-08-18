@@ -176,19 +176,19 @@ const checkConnection = async () => {
               onChange={(e) => setData("from_name", e.target.value)} className="w-full p-2 border rounded mb-2" />
               <div>
                 <button
-                type="button"
-                onClick={checkConnection}
-                className="bg-blue-600 text-white px-4 py-2 rounded mt-2"
-              >
-                Check Connection
-              </button>
+                  type="button"
+                  onClick={checkConnection}
+                  className="bg-blue-600 text-white px-4 py-2 rounded mt-2"
+                >
+                  Check Connection
+                </button>
                {/*  SMTP Settings */}
-          <p className="text-sm mt-1 text-white-900 dark:text-white">
-            {smtpStatus}
-          </p>
+                <p className="text-sm mt-1 text-white-900 dark:text-white">
+                  {smtpStatus}
+                </p>
               </div>
               
-          </div>
+           </div>
 
           {/* Campaign fields */}
           <input type="text" placeholder="Attack Name/Type" value={data.name}
