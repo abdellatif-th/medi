@@ -21,7 +21,9 @@
     },
     "dependencies": {
         "@heroicons/react": "^2.1.1",
+        "lucide-react": "^0.540.0",
         "papaparse": "^5.5.3",
+        "react-confetti": "^6.4.0",
         "react-hot-toast": "^2.5.2",
         "recharts": "^3.1.2"
     }

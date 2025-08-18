@@ -75,11 +75,11 @@ export default function PhishingForm({ auth }) {
     });
   };
 
-  const templates = [
-    { title: "Password Reset", name: "Password Reset Alert", email: "tectanja@gmail.com", link: "https://secure-login.example.com/reset", goal: "Prompt user to urgently reset their password", color: "from-red-500 to-pink-500" },
-    { title: "Invoice Scam", name: "Invoice Payment Needed", email: "tectanja@gmail.com", link: "https://billing.example.com/pay", goal: "Trick user into paying a fake invoice", color: "from-yellow-400 to-yellow-600" },
-    { title: "Fake Login Page", name: "Account Verification", email: "tectanja@gmail.com", link: "https://secure.example.com/login", goal: "Steal login credentials", color: "from-indigo-500 to-blue-500" },
-    { title: "Delivery Notification", name: "Delivery Failed - Action Required", email: "tectanja@gmail.com", link: "https://tracking.example.com/update", goal: "Get user to click fake tracking link", color: "from-green-400 to-emerald-600" },
+const templates = [
+    { title: "Réinitialisation de mot de passe", name: "Alerte de réinitialisation de mot de passe:", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Inciter l'utilisateur à réinitialiser urgemment son mot de passe", color: "from-red-500 to-pink-500" },
+    { title: "Facture frauduleuse", name: "Paiement de facture requis:", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Amener l'utilisateur à payer une fausse facture", color: "from-yellow-400 to-yellow-600" },
+    { title: "Page de connexion factice", name: "Vérification du compte:", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Récupérer les identifiants de connexion de l'utilisateur", color: "from-indigo-500 to-blue-500" },
+    { title: "Notification de livraison", name: "Échec de livraison - Action requise:", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Amener l'utilisateur à cliquer sur un faux lien de suivi", color: "from-green-400 to-emerald-600" },
   ];
 
   const loadTemplate = (tpl) => {
