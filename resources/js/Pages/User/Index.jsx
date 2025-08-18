@@ -69,6 +69,29 @@ export default function Index({ auth, users, queryParams = null, success }) {
               {success}
             </div>
           )}
+
+
+          <div className="flex flex-wrap gap-3 p-3 bg-gray-50 dark:bg-gray-700 border-gray-500 rounded">
+            <div className="flex-1 min-w-[200px]">
+              <TextInput
+                className="w-full"
+                defaultValue={queryParams.name}
+                placeholder="User Name"
+                onBlur={(e) => searchFieldChanged("name", e.target.value)}
+                onKeyPress={(e) => onKeyPress("name", e)}
+              />
+            </div>
+            <div className="flex-1 min-w-[200px]">
+              <TextInput
+                className="w-full"
+                defaultValue={queryParams.email}
+                placeholder="User Email"
+                onBlur={(e) => searchFieldChanged("email", e.target.value)}
+                onKeyPress={(e) => onKeyPress("email", e)}
+              />
+            </div>
+          </div>
+
           <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
             <div className="p-6 text-gray-900 dark:text-gray-100">
               <div className="overflow-auto">
@@ -113,35 +136,7 @@ export default function Index({ auth, users, queryParams = null, success }) {
                       <th className="px-3 py-3 text-right">Actions</th>
                     </tr>
                   </thead>
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b-2 border-gray-500">
-                    <tr className="text-nowrap">
-                      <th className="px-3 py-3"></th>
-                      <th className="px-3 py-3">
-                        <TextInput
-                          className="w-full"
-                          defaultValue={queryParams.name}
-                          placeholder="User Name"
-                          onBlur={(e) =>
-                            searchFieldChanged("name", e.target.value)
-                          }
-                          onKeyPress={(e) => onKeyPress("name", e)}
-                        />
-                      </th>
-                      <th className="px-3 py-3">
-                        <TextInput
-                          className="w-full"
-                          defaultValue={queryParams.email}
-                          placeholder="User Email"
-                          onBlur={(e) =>
-                            searchFieldChanged("email", e.target.value)
-                          }
-                          onKeyPress={(e) => onKeyPress("email", e)}
-                        />
-                      </th>
-                      <th className="px-3 py-3"></th>
-                      <th className="px-3 py-3"></th>
-                    </tr>
-                  </thead>
+                  
                   <tbody>
                     {users.data.map((user) => (
                       <tr

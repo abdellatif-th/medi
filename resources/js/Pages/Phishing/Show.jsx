@@ -48,10 +48,10 @@ export default function PhishingForm({ auth }) {
   };
 
   const templates = [
-    { title: "Password Reset", name: "Password Reset Alert", email: "security@example.com", link: "https://secure-login.example.com/reset", goal: "Prompt user to urgently reset their password", color: "from-red-500 to-pink-500" },
-    { title: "Invoice Scam", name: "Invoice Payment Needed", email: "billing@example.com", link: "https://billing.example.com/pay", goal: "Trick user into paying a fake invoice", color: "from-yellow-400 to-yellow-600" },
-    { title: "Fake Login Page", name: "Account Verification", email: "support@example.com", link: "https://secure.example.com/login", goal: "Steal login credentials", color: "from-indigo-500 to-blue-500" },
-    { title: "Delivery Notification", name: "Delivery Failed - Action Required", email: "no-reply@delivery.example", link: "https://tracking.example.com/update", goal: "Get user to click fake tracking link", color: "from-green-400 to-emerald-600" },
+    { title: "Password Reset", name: "Password Reset Alert", email: "tectanja@gmail.com", link: "https://secure-login.example.com/reset", goal: "Prompt user to urgently reset their password", color: "from-red-500 to-pink-500" },
+    { title: "Invoice Scam", name: "Invoice Payment Needed", email: "tectanja@gmail.com", link: "https://billing.example.com/pay", goal: "Trick user into paying a fake invoice", color: "from-yellow-400 to-yellow-600" },
+    { title: "Fake Login Page", name: "Account Verification", email: "tectanja@gmail.com", link: "https://secure.example.com/login", goal: "Steal login credentials", color: "from-indigo-500 to-blue-500" },
+    { title: "Delivery Notification", name: "Delivery Failed - Action Required", email: "tectanja@gmail.com", link: "https://tracking.example.com/update", goal: "Get user to click fake tracking link", color: "from-green-400 to-emerald-600" },
   ];
 
   const loadTemplate = (tpl) => {

@@ -126,7 +126,7 @@ export default function PhishingForm({ onEmailSent }) {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* 🔹 SMTP Settings */}
+          {/*  SMTP Settings */}
           <div className="p-4 border rounded bg-gray-50 dark:bg-gray-700">
             <h3 className="font-semibold text-gray-800 dark:text-white mb-2">SMTP Settings</h3>
             <input type="text" placeholder="Mailer (smtp)" value={data.mailer}
