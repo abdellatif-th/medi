@@ -9,6 +9,9 @@ use Inertia\Inertia;
 use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\AIController;
 use App\Models\PhishingSimulation;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
 Route::redirect('/', '/dashboard');
 
@@ -50,3 +53,28 @@ Route::get('/track/open/{id}', [TrackingController::class, 'trackOpen'])->name('
 Route::get('/track/click/{id}', [TrackingController::class, 'trackClick'])->name('track.click');
 
 require __DIR__ . '/auth.php';
+//TESTING SMTP 
+
+
+Route::post('/smtp-check', function (Request $request) {
+    // dynamically set SMTP config
+    Config::set('mail.mailers.smtp.host', $request->host);
+    Config::set('mail.mailers.smtp.port', $request->port);
+    Config::set('mail.mailers.smtp.username', $request->username);
+    Config::set('mail.mailers.smtp.password', $request->password);
+    Config::set('mail.mailers.smtp.encryption', $request->encryption);
+    Config::set('mail.from.address', $request->from_email);
+    Config::set('mail.from.name', $request->from_name);
+
+    try {
+        // test connection by sending a dummy email
+        Mail::raw('SMTP Test', function ($message) use ($request) {
+            $message->to($request->test_email ?? $request->username)
+                    ->subject('SMTP Test');
+        });
+
+        return response()->json(['success' => true, 'message' => '✅ Authenticated!']);
+    } catch (Exception $e) {
+        return response()->json(['success' => false, 'message' => '❌ Authentication failed! '  . $e->getMessage()]);
+    }
+});

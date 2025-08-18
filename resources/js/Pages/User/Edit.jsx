@@ -116,7 +116,7 @@ export default function Create({ auth, user }) {
                   Cancel
                 </Link>
                 <button className="bg-emerald-500 py-1 px-3 text-white rounded shadow transition-all hover:bg-emerald-600">
-                  Submit
+                  Update
                 </button>
               </div>
             </form>

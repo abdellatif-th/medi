@@ -4,13 +4,14 @@ Laravel 11 + React SPA
 A phishing simulation platform built with Laravel 11 and React. This application allows you to create, send, and track phishing campaigns in a secure environment to raise user awareness.
 
 /*Features*/
-1. User registration & login  
+1. User login  
 2. AI-powered automatic phishing email generation based on the campaign objective  
 3. Send phishing emails and track user interactions (clicked)  
 4. Real-time notifications on email interactions  
 5. Dashboard with detailed metrics and analytics  
 6. Filtering and pagination for sent emails
 7. Quick Campaign Templates
+8. Manual SMTP Settings + check Authentification
 
 /*Installation*/
 1. Clone the project  

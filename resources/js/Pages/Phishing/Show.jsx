@@ -14,15 +14,16 @@ export default function PhishingForm({ auth }) {
     generated_email: "",
     // SMTP params
     mailer: "smtp",
-    host: "",
+    host: "smtp.gmail.com",
     port: 587,
-    username: "",
-    password: "",
+    username: "abdellatif99.tahiri@gmail.com",
+    password: "frxk mcpf nxlx rnff",
     encryption: "tls",
     from_email: "",
-    from_name: "",
+    from_name: "TEST",
   });
 
+  const [smtpStatus, setSmtpStatus] = useState("");
   const [csvEmails, setCsvEmails] = useState([]);
   const [processing, setProcessing] = useState(false);
   const [generated, setGenerated] = useState("");
@@ -31,6 +32,33 @@ export default function PhishingForm({ auth }) {
   const [visible, setVisible] = useState(false);
   const [sending, setSending] = useState(false);
   const fileInputRef = useRef(null);
+
+  const checkConnection = async () => {
+    if (!data.host || !data.username || !data.password) {
+      setSmtpStatus("❗ Please fill in Host, Username and Password");
+      return;
+    }
+  
+    setSmtpStatus("⏳ Checking connection...");
+    try {
+      const res = await axios.post("/smtp-check", {
+        host: data.host,
+        port: data.port,
+        username: data.username,
+        password: data.password,
+        encryption: data.encryption,
+        from_email: data.from_email,
+        from_name: data.from_name,
+        test_email: data.username, 
+      });
+  
+      setSmtpStatus(res.data.message);
+    } catch (err) {
+      setSmtpStatus("❌ Authentication failed");
+      console.error(err);
+    }
+  };
+  
 
   const handleCSVUpload = (e) => {
     const file = e.target.files[0];
@@ -137,6 +165,19 @@ export default function PhishingForm({ auth }) {
               <input type="text" placeholder="Encryption (tls/ssl)" value={data.encryption} onChange={(e) => setData("encryption", e.target.value)} className="w-full p-2 border rounded mb-2" />
               <input type="email" placeholder="From Email" value={data.from_email} onChange={(e) => setData("from_email", e.target.value)} className="w-full p-2 border rounded mb-2" />
               <input type="text" placeholder="From Name" value={data.from_name} onChange={(e) => setData("from_name", e.target.value)} className="w-full p-2 border rounded mb-2" />
+              <div>
+                <button
+                type="button"
+                onClick={checkConnection}
+                className="bg-blue-600 text-white px-4 py-2 rounded mt-2"
+              >
+                Check Connection
+              </button>
+               {/*  SMTP Settings */}
+                <p className="text-sm mt-1 text-white-900 dark:text-white">
+                  {smtpStatus}
+                </p>
+              </div>
             </div>
 
             {/* Campaign fields */}
