@@ -72,7 +72,7 @@ const checkConnection = async () => {
     { title: "Facture frauduleuse", name: "Paiement de facture requis", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Amener l'utilisateur à payer une fausse facture", color: "from-yellow-400 to-yellow-600" },
     { title: "Page de connexion factice", name: "Vérification du compte", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Récupérer les identifiants de connexion de l'utilisateur", color: "from-indigo-500 to-blue-500" },
     { title: "Notification de livraison", name: "Échec de livraison - Action requise", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Amener l'utilisateur à cliquer sur un faux lien de suivi", color: "from-green-400 to-emerald-600" },
-    // { title: "Téléchargement de document", name: "Votre document demandé est prêt ", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Simuler le téléchargement d'un fichier pour formation interne", color: "from-purple-500 to-pink-500" },
+    { title: "Téléchargement de document", name: "Votre document demandé est prêt ", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/safe-docs/sample.docx", goal: "Simuler le téléchargement d'un fichier pour formation interne", color: "from-purple-500 to-pink-500" },
   ];
 
   const loadTemplate = (tpl) => {
