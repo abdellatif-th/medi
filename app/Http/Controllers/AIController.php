@@ -88,31 +88,29 @@ EOT;
     public function sendPhishing(Request $request)
     {
         $request->validate([
-            'name'           => 'required|string',
-            'email'          => 'required|email',
-            'generated_email'=> 'required|string',
-            'link'           => 'nullable|url',
-            'goal'           => 'nullable|string',
-            'from_email'     => 'nullable|email',
-            'from_name'      => 'nullable|string',
-            'host'           => 'required|string',
-            'port'           => 'required|integer',
-            'username'       => 'required|string',
-            'password'       => 'required|string',
-            'encryption'     => 'nullable|string',
+            'name'            => 'required|string',
+            'email'           => 'required|email',
+            'generated_email' => 'required|string',
+            'link'            => 'nullable|url',
+            'goal'            => 'nullable|string',
+            'from_email'      => 'nullable|email',
+            'from_name'       => 'nullable|string',
+
+            // SMTP fields optional
+            'host'     => 'nullable|string',
+            'port'     => 'nullable|integer',
+            'username' => 'nullable|string',
+            'password' => 'nullable|string',
+            'encryption' => 'nullable|string',
         ]);
 
+
         // 1️⃣ SMTP config override
-        Config::set('mail.mailers.smtp', [
-            'transport'  => $request->mailer ?? 'smtp',
-            'host'       => $request->host,
-            'port'       => $request->port,
-            'encryption' => $request->encryption ?? 'tls',
-            'username'   => $request->username,
-            'password'   => $request->password,
-            'timeout'    => null,
-            'auth_mode'  => null,
-        ]);
+       if ($request->filled('host') && $request->filled('mailer') && $request->filled('port')) {
+                Config::set('mail.mailers.smtp.host', $request->host);
+                Config::set('mail.mailers.smtp.transport', $request->mailer); // 👈 use mailer
+                Config::set('mail.mailers.smtp.port', $request->port);
+            }
 
         Config::set('mail.from', [
             'address' => $request->from_email ?? config('mail.from.address'),

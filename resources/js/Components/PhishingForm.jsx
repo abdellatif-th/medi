@@ -12,14 +12,14 @@ export default function PhishingForm({ onEmailSent }) {
     goal: "",
     generated_email: "",
     // SMTP params 
-    mailer: "smtp",
-    host: "smtp.gmail.com",
-    port: 587,
-    username: "abdellatif99.tahiri@gmail.com",
-    password: "frxk mcpf nxlx rnff",
-    encryption: "tls",
+    mailer: "",
+    host: "",
+    port: "",
+    username: "",
+    password: "",
+    encryption: "",
     from_email: "",
-    from_name: "TEST",
+    from_name: "",
   });
   const [smtpStatus, setSmtpStatus] = useState("");
 
@@ -33,19 +33,13 @@ export default function PhishingForm({ onEmailSent }) {
   const fileInputRef = useRef(null);
 
 const checkConnection = async () => {
-  if (!data.host || !data.username || !data.password) {
-    setSmtpStatus("❗ Please fill in Host, Username and Password");
-    return;
-  }
+
 
   setSmtpStatus("⏳ Checking connection...");
   try {
     const res = await axios.post("/smtp-check", {
       host: data.host,
       port: data.port,
-      username: data.username,
-      password: data.password,
-      encryption: data.encryption,
       from_email: data.from_email,
       from_name: data.from_name,
       test_email: data.username, 
@@ -74,10 +68,11 @@ const checkConnection = async () => {
   };
 
   const templates = [
-    { title: "Réinitialisation de mot de passe", name: "Alerte de réinitialisation de mot de passe:", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Inciter l'utilisateur à réinitialiser urgemment son mot de passe", color: "from-red-500 to-pink-500" },
-    { title: "Facture frauduleuse", name: "Paiement de facture requis:", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Amener l'utilisateur à payer une fausse facture", color: "from-yellow-400 to-yellow-600" },
-    { title: "Page de connexion factice", name: "Vérification du compte:", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Récupérer les identifiants de connexion de l'utilisateur", color: "from-indigo-500 to-blue-500" },
-    { title: "Notification de livraison", name: "Échec de livraison - Action requise:", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Amener l'utilisateur à cliquer sur un faux lien de suivi", color: "from-green-400 to-emerald-600" },
+    { title: "Réinitialisation de mot de passe", name: "Alerte de réinitialisation de mot de passe", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Inciter l'utilisateur à réinitialiser urgemment son mot de passe", color: "from-red-500 to-pink-500" },
+    { title: "Facture frauduleuse", name: "Paiement de facture requis", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Amener l'utilisateur à payer une fausse facture", color: "from-yellow-400 to-yellow-600" },
+    { title: "Page de connexion factice", name: "Vérification du compte", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Récupérer les identifiants de connexion de l'utilisateur", color: "from-indigo-500 to-blue-500" },
+    { title: "Notification de livraison", name: "Échec de livraison - Action requise", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Amener l'utilisateur à cliquer sur un faux lien de suivi", color: "from-green-400 to-emerald-600" },
+    // { title: "Téléchargement de document", name: "Votre document demandé est prêt ", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Simuler le téléchargement d'un fichier pour formation interne", color: "from-purple-500 to-pink-500" },
   ];
 
   const loadTemplate = (tpl) => {

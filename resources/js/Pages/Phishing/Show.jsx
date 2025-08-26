@@ -8,19 +8,19 @@ export default function PhishingForm({ auth }) {
   const { data, setData, errors } = useForm({
     // Email attack params
     name: "",
-    email: "", // manual entry, can be multiple emails
+    email: "", 
     link: "",
     goal: "",
     generated_email: "",
     // SMTP params
-    mailer: "smtp",
-    host: "smtp.gmail.com",
-    port: 587,
-    username: "abdellatif99.tahiri@gmail.com",
-    password: "frxk mcpf nxlx rnff",
-    encryption: "tls",
+    mailer: "",
+    host: "",
+    port: "",
+    username: "",
+    password: "",
+    encryption: "",
     from_email: "",
-    from_name: "TEST",
+    from_name: "",
   });
 
   const [smtpStatus, setSmtpStatus] = useState("");
@@ -34,10 +34,10 @@ export default function PhishingForm({ auth }) {
   const fileInputRef = useRef(null);
 
   const checkConnection = async () => {
-    if (!data.host || !data.username || !data.password) {
-      setSmtpStatus("❗ Please fill in Host, Username and Password");
-      return;
-    }
+    // if (!data.host || !data.username || !data.password) {
+    //   setSmtpStatus("❗ Please fill in Host, Username and Password");
+    //   return;
+    // }
   
     setSmtpStatus("⏳ Checking connection...");
     try {

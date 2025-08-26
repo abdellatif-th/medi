@@ -5,21 +5,24 @@ return [
     'default' => env('MAIL_MAILER', 'smtp'),
 
     'mailers' => [
-        'smtp' => [
-            'transport' => 'smtp',
-            'host' => env('MAIL_HOST', 'smtp.gmail.com'),
-            'port' => env('MAIL_PORT', 587),
-            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
-            'username' => env('MAIL_USERNAME'),
-            'password' => env('MAIL_PASSWORD'),
-            'timeout' => null,
-            'auth_mode' => null,
-        ],
+    'smtp' => [
+        'transport' => 'smtp',
+        'host' => env('MAIL_HOST', ''),
+        'port' => env('MAIL_PORT', ''),
+        'encryption' => env('MAIL_ENCRYPTION', null),
+        'username' => env('MAIL_USERNAME', null),
+        'password' => env('MAIL_PASSWORD', null),
+        'timeout' => null,
+        'auth_mode' => null,
     ],
+],
+
+
+
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'example@gmail.com'),
-        'name' => env('MAIL_FROM_NAME', 'Default Name'),
+        'address' => env('MAIL_FROM_ADDRESS', ''),
+        'name' => env('MAIL_FROM_NAME', ''),
     ],
 
     'markdown' => [
