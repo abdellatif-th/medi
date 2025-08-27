@@ -4,7 +4,7 @@ import axios from "axios";
 import Papa from "papaparse";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 
-export default function PhishingForm({ auth }) {
+export default function PhishingForm({ onEmailSent, auth }) {
   const { data, setData, errors } = useForm({
     // Email attack params
     name: "",
@@ -13,14 +13,14 @@ export default function PhishingForm({ auth }) {
     goal: "",
     generated_email: "",
     // SMTP params
-    mailer: "",
-    host: "",
-    port: "",
+    mailer: "smtp",
+    host: "127.0.0.1",
+    port: "1025",
     username: "",
     password: "",
     encryption: "",
-    from_email: "",
-    from_name: "",
+    from_email: "test@gmail.com",
+    from_name: "test",
   });
 
   const [smtpStatus, setSmtpStatus] = useState("");
@@ -33,37 +33,30 @@ export default function PhishingForm({ auth }) {
   const [sending, setSending] = useState(false);
   const fileInputRef = useRef(null);
 
-  const checkConnection = async () => {
-    // if (!data.host || !data.username || !data.password) {
-    //   setSmtpStatus("❗ Please fill in Host, Username and Password");
-    //   return;
-    // }
-  
-    setSmtpStatus("⏳ Checking connection...");
-    try {
-      const res = await axios.post("/smtp-check", {
-        host: data.host,
-        port: data.port,
-        username: data.username,
-        password: data.password,
-        encryption: data.encryption,
-        from_email: data.from_email,
-        from_name: data.from_name,
-        test_email: data.username, 
-      });
-  
-      setSmtpStatus(res.data.message);
-    } catch (err) {
-      setSmtpStatus("❌ Authentication failed");
-      console.error(err);
-    }
-  };
-  
+const checkConnection = async () => {
+
+
+  setSmtpStatus("⏳ Checking connection...");
+  try {
+    const res = await axios.post("/smtp-check", {
+      host: data.host,
+      port: data.port,
+      from_email: data.from_email,
+      from_name: data.from_name,
+      test_email: data.username, 
+    });
+
+    setSmtpStatus(res.data.message);
+  } catch (err) {
+    setSmtpStatus("❌ Authentication failed");
+    console.error(err);
+  }
+};
+
 
   const handleCSVUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     Papa.parse(file, {
       header: false,
       skipEmptyLines: true,
@@ -75,11 +68,12 @@ export default function PhishingForm({ auth }) {
     });
   };
 
-const templates = [
-    { title: "Réinitialisation de mot de passe", name: "Alerte de réinitialisation de mot de passe:", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Inciter l'utilisateur à réinitialiser urgemment son mot de passe", color: "from-red-500 to-pink-500" },
-    { title: "Facture frauduleuse", name: "Paiement de facture requis:", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Amener l'utilisateur à payer une fausse facture", color: "from-yellow-400 to-yellow-600" },
-    { title: "Page de connexion factice", name: "Vérification du compte:", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Récupérer les identifiants de connexion de l'utilisateur", color: "from-indigo-500 to-blue-500" },
-    { title: "Notification de livraison", name: "Échec de livraison - Action requise:", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Amener l'utilisateur à cliquer sur un faux lien de suivi", color: "from-green-400 to-emerald-600" },
+  const templates = [
+    { title: "Réinitialisation de mot de passe", name: "Alerte de réinitialisation de mot de passe", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Inciter l'utilisateur à réinitialiser urgemment son mot de passe", color: "from-red-500 to-pink-500" },
+    { title: "Facture frauduleuse", name: "Paiement de facture requis", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Amener l'utilisateur à payer une fausse facture", color: "from-yellow-400 to-yellow-600" },
+    { title: "Page de connexion factice", name: "Vérification du compte", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Récupérer les identifiants de connexion de l'utilisateur", color: "from-indigo-500 to-blue-500" },
+    { title: "Notification de livraison", name: "Échec de livraison - Action requise", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/sensibilisationphishing", goal: "Amener l'utilisateur à cliquer sur un faux lien de suivi", color: "from-green-400 to-emerald-600" },
+    { title: "Téléchargement de document", name: "Votre document demandé est prêt ", email: "tectanja@gmail.com", link: "http://127.0.0.1:8000/safe-docs/sample.docx", goal: "Simuler le téléchargement d'un fichier pour formation interne", color: "from-purple-500 to-pink-500" },
   ];
 
   const loadTemplate = (tpl) => {
@@ -97,6 +91,7 @@ const templates = [
     setTimeout(() => setVisible(false), 5000);
   };
 
+  // Step 1: Generate email
   const handleSubmit = async (e) => {
     e.preventDefault();
     const firstEmail = csvEmails.length > 0 ? csvEmails[0] : data.email.split(",")[0]?.trim();
@@ -117,6 +112,7 @@ const templates = [
     }
   };
 
+  // Step 2: Send email
   const handleSend = async () => {
     if (!generated.trim()) {
       showNotification("error", "❗ Please generate an email before sending.");
@@ -127,13 +123,15 @@ const templates = [
       showNotification("error", "❗ Please enter at least one email or upload a CSV.");
       return;
     }
-
     try {
       setSending(true);
       await Promise.all(
-        emails.map((email) => axios.post(route("phishing.send"), { ...data, email, generated_email: generated }))
+        emails.map((email) =>
+          axios.post(route("phishing.send"), { ...data, email, generated_email: generated })
+        )
       );
       showNotification("success", `✅ ${emails.length} emails sent successfully!`);
+      if (onEmailSent) onEmailSent();
       router.reload();
     } catch (err) {
       console.error(err);
