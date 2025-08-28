@@ -1,3 +1,8 @@
+# THIS PROJECT WAS MADE BY ABDELLATIF TAHIRI
+# FOR FURTHER INFORMATION OR COLLABORATION CONTACT ME ON:
+# EMAIL:
+# abdellatif99.tahiri@gmail.com
+
 Phishing Simulation Platform  
 Laravel 11 + React SPA
 

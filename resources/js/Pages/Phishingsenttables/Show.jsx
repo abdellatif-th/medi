@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { toast } from "react-hot-toast"; // Pour les notifications (tu peux remplacer alert par toast ou pas)
+import { toast } from "react-hot-toast"; // Pour les notifications
 import { Head } from "@inertiajs/react";
 
 export default function SentEmailsPage({ auth, emails }) {
@@ -9,17 +9,14 @@ export default function SentEmailsPage({ auth, emails }) {
   const [currentPage, setCurrentPage] = useState(1);
   const emailsPerPage = 10;
 
-  // Suivi des changements de status avec toast
+  // Suivi des changements de status
   useEffect(() => {
     const currentStatuses = emails.map(email => email.clicked);
 
     if (prevStatuses.length > 0) {
       emails.forEach((email, idx) => {
         if (email.clicked !== prevStatuses[idx]) {
-          // Tu peux remplacer alert par toast ici si tu veux
           alert(`Status changed for ${email.email}: ${email.clicked === 1 ? "Clicked" : "Pending"}`);
-          // ou
-          // toast.success(`${email.email} status changed to ${email.clicked === 1 ? "Clicked" : "Pending"}`);
         }
       });
     }
@@ -27,8 +24,13 @@ export default function SentEmailsPage({ auth, emails }) {
     setPrevStatuses(currentStatuses);
   }, [emails]);
 
-  // Filtrage
-  const filteredEmails = emails.filter((email) => {
+  // Trier par date décroissante
+  const sortedEmails = [...emails].sort(
+    (a, b) => new Date(b.created_at) - new Date(a.created_at)
+  );
+
+  // Filtrage après tri
+  const filteredEmails = sortedEmails.filter((email) => {
     if (filterStatus === "all") return true;
     if (filterStatus === "pending") return email.clicked !== 1;
     if (filterStatus === "clicked") return email.clicked === 1;
@@ -65,35 +67,30 @@ export default function SentEmailsPage({ auth, emails }) {
   const indexOfFirstEmail = indexOfLastEmail - emailsPerPage;
   const currentEmails = filteredEmails.slice(indexOfFirstEmail, indexOfLastEmail);
 
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
-  };
+  const handlePrevPage = () => setCurrentPage(prev => (prev > 1 ? prev - 1 : prev));
+  const handleNextPage = () => setCurrentPage(prev => (prev < totalPages ? prev + 1 : prev));
 
-  const handleNextPage = () => {
-    setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
-  };
+  useEffect(() => setCurrentPage(1), [filterStatus]);
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [filterStatus]);
- // Calcul du CTR
+  // Calcul du CTR
   const clickedCount = filteredEmails.filter(e => e.clicked === 1).length;
   const ctrPercent = totalEmails > 0 ? ((clickedCount / totalEmails) * 100).toFixed(1) : "0";
- return (
-    <AuthenticatedLayout
-          user={auth.user}
-          header={
-            <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight ">
-              Sent Emails
-            </h2>
-          }
-        >
-         <Head title="Phishing Email Table" />
 
-    <div className="mt-12">
-      <div className="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg max-w-7xl mx-auto sm:px-6 lg:px-8 mt-4">
-        <div className="p-6 text-gray-900 dark:text-gray-100">
-           {/* Stat boxes */}
+  return (
+    <AuthenticatedLayout
+      user={auth.user}
+      header={
+        <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+          Sent Emails
+        </h2>
+      }
+    >
+      <Head title="Phishing Email Table" />
+
+      <div className="mt-12">
+        <div className="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg max-w-7xl mx-auto sm:px-6 lg:px-8 mt-4">
+          <div className="p-6 text-gray-900 dark:text-gray-100">
+            {/* Stat boxes */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
               {/* Total Sent */}
               <div className="flex flex-col items-center justify-center bg-[#0ea0efff] p-6 rounded-2xl shadow-md">
@@ -105,12 +102,11 @@ export default function SentEmailsPage({ auth, emails }) {
               </div>
 
               {/* Clicked */}
-
               <div className="flex flex-col items-center justify-center bg-[#0c7e06]  rounded-2xl shadow-md">
-               <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2a5 5 0 00-5 5v10a5 5 0 0010 0V7a5 5 0 00-5-5z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v4" />
-              </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2a5 5 0 00-5 5v10a5 5 0 0010 0V7a5 5 0 00-5-5z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v4" />
+                </svg>
                 <div className="text-3xl font-bold">{clickedCount}</div>
                 <div className="text-lg font-medium">Clicked</div>
               </div>
@@ -125,125 +121,120 @@ export default function SentEmailsPage({ auth, emails }) {
               </div>
             </div>
 
+            {/* Filtre */}
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-xl font-bold mb-4">Sent Emails</h2>
 
-          {/* Filtre */}
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-xl font-bold mb-4">Sent Emails</h2>
-
-            <div>
-              <label htmlFor="statusFilter" className="mr-2 font-semibold">
-                Filter by Status:
-              </label>
-              <select
-                id="statusFilter"
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-                className="rounded border px-2 py-1 dark:bg-gray-700 dark:text-gray-100"
-              >
-                <option value="all">All</option>
-                <option value="clicked">Clicked</option>
-                <option value="pending">Pending</option>
-              </select>
+              <div>
+                <label htmlFor="statusFilter" className="mr-2 font-semibold">
+                  Filter by Status:
+                </label>
+                <select
+                  id="statusFilter"
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value)}
+                  className="rounded border px-2 py-1 dark:bg-gray-700 dark:text-gray-100"
+                >
+                  <option value="all">All</option>
+                  <option value="clicked">Clicked</option>
+                  <option value="pending">Pending</option>
+                </select>
+              </div>
             </div>
 
-            
-          </div>
-
-         
-
-          {/* Table */}
-          {currentEmails.length === 0 ? (
-            <p className="text-gray-500 dark:text-gray-400">No emails found.</p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-sm text-left">
-                <thead className="bg-gray-100 dark:bg-gray-700 uppercase text-xs text-gray-600 dark:text-gray-300">
-                  <tr>
-                    <th className="px-6 py-3">Target</th>
-                    <th className="px-6 py-3">Email</th>
-                    <th className="px-6 py-3">Status</th>
-                    <th className="px-6 py-3">Sent At</th>
-                    <th className="px-6 py-3">Clicked Link</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentEmails.map((email) => (
-                    <tr
-                      key={email.id}
-                      className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
-                    >
-                      <td className="px-6 py-4">{email.name}</td>
-                      <td className="px-6 py-4">{email.email}</td>
-                      <td className="px-6 py-4 space-x-2">
-                        {email.clicked === 1 ? (
-                          <span className="inline-block px-2 py-1 text-xs font-semibold text-white rounded-full bg-green-600 ml-2">
-                            Clicked
-                          </span>
-                        ) : (
-                          <span className="inline-block px-2 py-1 text-xs font-semibold text-white rounded-full bg-gray-500 ml-2">
-                            Pending
-                          </span>
-                        )}
-                      </td>
-                      <td className="px-6 py-4">{new Date(email.created_at).toLocaleString()}</td>
-                      <td className="px-6 py-4">
-                        {email.clicked_url ? (
-                          <a
-                            href={email.clicked_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="underline text-purple-600"
-                          >
-                            {email.clicked_url}
-                          </a>
-                        ) : (
-                          <span className="text-gray-400 italic">No link clicked</span>
-                        )}
-                      </td>
+            {/* Table */}
+            {currentEmails.length === 0 ? (
+              <p className="text-gray-500 dark:text-gray-400">No emails found.</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full text-sm text-left">
+                  <thead className="bg-gray-100 dark:bg-gray-700 uppercase text-xs text-gray-600 dark:text-gray-300">
+                    <tr>
+                      <th className="px-6 py-3">Target</th>
+                      <th className="px-6 py-3">Email</th>
+                      <th className="px-6 py-3">Status</th>
+                      <th className="px-6 py-3">Sent At</th>
+                      <th className="px-6 py-3">Clicked Link</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-              {/* Boutons Export & Pagination */}
-              <div className="flex items-center space-x-2  mt-4 float-right ">
-              <button
-                onClick={exportToCSV}
-                className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
-              >
-                Export CSV
-              </button>
-              <button
-                onClick={handlePrevPage}
-                disabled={currentPage === 1}
-                className={`px-3 py-1 rounded ${
-                  currentPage === 1
-                    ? "bg-gray-500 cursor-not-allowed"
-                    : "bg-blue-600 text-white hover:bg-blue-700"
-                }`}
-              >
-                Prev
-              </button>
-              <span>
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages || totalPages === 0}
-                className={`px-3 py-1 rounded ${
-                  currentPage === totalPages || totalPages === 0
-                    ? "bg-gray-500 cursor-not-allowed"
-                    : "bg-blue-600 text-white hover:bg-blue-700"
-                }`}
-              >
-                Next
-              </button>
-            </div>
-            </div>
-          )}
+                  </thead>
+                  <tbody>
+                    {currentEmails.map((email) => (
+                      <tr
+                        key={email.id}
+                        className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
+                      >
+                        <td className="px-6 py-4">{email.name}</td>
+                        <td className="px-6 py-4">{email.email}</td>
+                        <td className="px-6 py-4 space-x-2">
+                          {email.clicked === 1 ? (
+                            <span className="inline-block px-2 py-1 text-xs font-semibold text-white rounded-full bg-green-600 ml-2">
+                              Clicked
+                            </span>
+                          ) : (
+                            <span className="inline-block px-2 py-1 text-xs font-semibold text-white rounded-full bg-gray-500 ml-2">
+                              Pending
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4">{new Date(email.created_at).toLocaleString()}</td>
+                        <td className="px-6 py-4">
+                          {email.clicked_url ? (
+                            <a
+                              href={email.clicked_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="underline text-purple-600"
+                            >
+                              {email.clicked_url}
+                            </a>
+                          ) : (
+                            <span className="text-gray-400 italic">No link clicked</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                {/* Boutons Export & Pagination */}
+                <div className="flex items-center space-x-2 mt-4 float-right">
+                  <button
+                    onClick={exportToCSV}
+                    className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+                  >
+                    Export CSV
+                  </button>
+                  <button
+                    onClick={handlePrevPage}
+                    disabled={currentPage === 1}
+                    className={`px-3 py-1 rounded ${
+                      currentPage === 1
+                        ? "bg-gray-500 cursor-not-allowed"
+                        : "bg-blue-600 text-white hover:bg-blue-700"
+                    }`}
+                  >
+                    Prev
+                  </button>
+                  <span>
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <button
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages || totalPages === 0}
+                    className={`px-3 py-1 rounded ${
+                      currentPage === totalPages || totalPages === 0
+                        ? "bg-gray-500 cursor-not-allowed"
+                        : "bg-blue-600 text-white hover:bg-blue-700"
+                    }`}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  </AuthenticatedLayout>
-);
-
+    </AuthenticatedLayout>
+  );
 }

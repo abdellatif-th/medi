@@ -92,24 +92,37 @@ const checkConnection = async () => {
 
   // Step 1: Generate email
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const firstEmail = csvEmails.length > 0 ? csvEmails[0] : data.email.split(",")[0]?.trim();
-    if (!data.name || !firstEmail || !data.link) {
-      showNotification("error", "❗ At least one Email and Link are required.");
-      return;
-    }
-    setProcessing(true);
-    try {
-      const response = await axios.post(route("phishing.generate"), { ...data, email: firstEmail });
+  e.preventDefault();
+  const firstEmail = csvEmails.length > 0 ? csvEmails[0] : data.email.split(",")[0]?.trim();
+
+  if (!data.name || !firstEmail || !data.link) {
+    showNotification("error", "❗ At least one Email and Link are required.");
+    return;
+  }
+
+  setProcessing(true);
+
+  try {
+    const response = await axios.post(route("phishing.generate"), { ...data, email: firstEmail });
+
+    if (response.data.success) {
       setGenerated(response.data.generated);
       setData("generated_email", response.data.generated);
-    } catch (err) {
-      console.error(err);
-      showNotification("error", "❌ Failed to generate email.");
-    } finally {
-      setProcessing(false);
+    } else {
+      // Laravel returned success: false
+      showNotification("error", response.data.message || "❌ Unknown error while generating email.");
     }
-  };
+  } catch (err) {
+    console.error("Generation error:", err);
+
+    // Try to get backend message (like "❌ OpenRouter API failed with status 401")
+    const backendMessage = err.response?.data?.message;
+
+    showNotification("error", backendMessage || "❌ Failed to generate email (server error).");
+  } finally {
+    setProcessing(false);
+  }
+};
 
   // Step 2: Send email
   const handleSend = async () => {

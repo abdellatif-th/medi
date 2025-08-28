@@ -27,3 +27,7 @@ class DatabaseSeeder extends Seeder
       
     }
 }
+# THIS PROJECT WAS MADE BY ABDELLATIF TAHIRI
+# FOR FURTHER INFORMATION OR COLLABORATION CONTACT ME ON:
+# EMAIL:
+# abdellatif99.tahiri@gmail.com
