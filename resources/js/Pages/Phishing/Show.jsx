@@ -12,6 +12,7 @@ export default function PhishingForm({ onEmailSent, auth }) {
     link: "",
     goal: "",
     generated_email: "",
+    subject: "", // New subject field
     // SMTP params
     mailer: "smtp",
     host: "127.0.0.1",
@@ -105,7 +106,12 @@ const checkConnection = async () => {
       setGenerated(response.data.generated);
       setData("generated_email", response.data.generated);
     } catch (err) {
-      console.error(err);
+      if (err.response) {
+        console.error("Backend error:", err.response.status, err.response.data);
+      } else {
+        console.error("Axios error:", err.message);
+      }
+
       showNotification("error", "❌ Failed to generate email.");
     } finally {
       setProcessing(false);
@@ -123,11 +129,11 @@ const checkConnection = async () => {
       showNotification("error", "❗ Please enter at least one email or upload a CSV.");
       return;
     }
-    try {
+   try {
       setSending(true);
       await Promise.all(
         emails.map((email) =>
-          axios.post(route("phishing.send"), { ...data, email, generated_email: generated })
+          axios.post(route("phishing.send"), { ...data, email, generated_email: generated, subject: data.subject})
         )
       );
       showNotification("success", `✅ ${emails.length} emails sent successfully!`);
@@ -180,7 +186,13 @@ const checkConnection = async () => {
 
             {/* Campaign fields */}
             <input type="text" placeholder="Attack Name/Type" value={data.name} onChange={(e) => setData("name", e.target.value)} className="w-full p-2 border rounded" />
-            
+            <input
+              type="text"
+              placeholder="Email Subject"
+              value={data.subject}
+              onChange={(e) => setData("subject", e.target.value)}
+              className="w-full p-2 border rounded"
+            />
             <input type="text" placeholder="To Emails (comma separated)" value={data.email} onChange={(e) => setData("email", e.target.value)} disabled={csvEmails.length > 0} className={`w-full p-2 border rounded ${csvEmails.length > 0 ? "bg-gray-200 cursor-not-allowed" : ""}`} />
             <p className="text-xs text-gray-400">{csvEmails.length > 0 ? "Using emails from CSV file." : "Enter emails separated by commas, or upload a CSV file."}</p>
 

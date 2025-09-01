@@ -35,15 +35,14 @@ Utilisez un langage persuasif, des techniques typiques de phishing (urgence, aut
 Détails pour la simulation :
 - **Nom de la cible :** {$request->name}
 - **Email de la cible :** {$request->email}
-- **Objectif de phishing :** {$request->goal}
 
 Format de la réponse : corps complet de l'email avec ligne d'objet.
 
 EOT;
 
-        if ($request->goal) {
-            $prompt .= "\n- Objective: {$request->goal}";
-        }
+        // if ($request->goal) {
+        //     $prompt .= "\n- Objective: {$request->goal}";
+        // }
         if ($request->link) {
             $prompt .= "\n- Phishing Link to include: {$request->link}";
         }
@@ -134,7 +133,9 @@ EOT;
                 new PhishingSimulationMail(
                     $request->generated_email,
                     $record->id,
-                    $request->link
+                    $request->link,
+                    $request->subject 
+
                 )
             );
 

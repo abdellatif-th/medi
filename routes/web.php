@@ -46,7 +46,7 @@ Route::get('/phishing-form', function () {
 Route::get('/sensibilisationphishing', function () {
     return Inertia::render('SensibilisationPhishing');
 
-})->middleware(['auth', 'verified'])->name('sensibilisationphishing');
+});
 
 Route::get('/phishing-table', function () {
     $emails = PhishingSimulation::all(); 

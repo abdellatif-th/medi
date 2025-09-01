@@ -12,16 +12,23 @@ class PhishingSimulationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(
-        public string $generatedEmail,
-        public int $simulationId,
-        public string $link
-    ) {}
+    public $generatedEmail;
+    public $simulationId;
+    public $link;
+    public $subject; // no type!
+
+    public function __construct($generatedEmail, $simulationId, $link, $subject = "ATTENTION")
+    {
+        $this->generatedEmail = $generatedEmail;
+        $this->simulationId = $simulationId;
+        $this->link = $link;
+        $this->subject = $subject; // dynamic subject
+    }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'ATTENTION',
+            subject: $this->subject, // dynamic subject used here
         );
     }
 

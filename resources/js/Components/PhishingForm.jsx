@@ -11,6 +11,8 @@ export default function PhishingForm({ onEmailSent }) {
     link: "",
     goal: "",
     generated_email: "",
+    subject: "",   // 👈 new field for subject
+
     // SMTP params 
     mailer: "",
     host: "",
@@ -139,7 +141,7 @@ const checkConnection = async () => {
       setSending(true);
       await Promise.all(
         emails.map((email) =>
-          axios.post(route("phishing.send"), { ...data, email, generated_email: generated })
+          axios.post(route("phishing.send"), { ...data, email, generated_email: generated, subject: data.subject})
         )
       );
       showNotification("success", `✅ ${emails.length} emails sent successfully!`);
@@ -201,6 +203,14 @@ const checkConnection = async () => {
           {/* Campaign fields */}
           <input type="text" placeholder="Attack Name/Type" value={data.name}
             onChange={(e) => setData("name", e.target.value)} className="w-full p-2 border rounded" />
+         <input
+            type="text"
+            placeholder="Email Subject"
+            value={data.subject}
+            onChange={(e) => setData("subject", e.target.value)}
+            className="w-full p-2 border rounded"
+          />
+
 
           <input type="text" placeholder="To Emails (comma separated)" value={data.email}
             onChange={(e) => setData("email", e.target.value)} disabled={csvEmails.length > 0}
